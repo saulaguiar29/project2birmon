@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BirdData } from "./index";
 import CameraViewComponent from "../components/CameraViewComponent";
 import ImagePreviewForm from "../components/ImagePreviewForm";
+import { useTheme } from "../contexts/ThemeContext";
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>("back");
@@ -17,6 +18,7 @@ export default function Camera() {
   const [location, setLocation] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const cameraRef = useRef<CameraView>(null);
+  const { theme } = useTheme();
 
   if (!permission) {
     return <View />;
@@ -24,8 +26,10 @@ export default function Camera() {
 
   if (!permission.granted) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.message}>
+      <View
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
+        <Text style={[styles.message, { color: theme.colors.onBackground }]}>
           We need your permission to show the camera
         </Text>
         <Button onPress={requestPermission}>Grant Permission</Button>
@@ -139,7 +143,9 @@ export default function Camera() {
 
   // Show the camera view
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <CameraViewComponent
         facing={facing}
         cameraRef={cameraRef}
@@ -154,7 +160,6 @@ export default function Camera() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
   },
   message: {
     textAlign: "center",

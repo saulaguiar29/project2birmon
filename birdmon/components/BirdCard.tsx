@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Pressable } from "react-native";
 import { Card, Text, Chip } from "react-native-paper";
 import { BirdData } from "../app/index";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface BirdCardProps {
   bird: BirdData;
@@ -9,12 +10,20 @@ interface BirdCardProps {
 }
 
 export default function BirdCard({ bird, onPress }: BirdCardProps) {
+  const { theme } = useTheme();
+
   return (
     <Pressable onPress={onPress}>
-      <Card style={styles.card} elevation={4}>
+      <Card
+        style={[styles.card, { backgroundColor: theme.colors.surface }]}
+        elevation={4}
+      >
         <Card.Cover source={{ uri: bird.imageUri }} style={styles.image} />
         <Card.Content style={styles.content}>
-          <Text variant="titleLarge" style={styles.name}>
+          <Text
+            variant="titleLarge"
+            style={[styles.name, { color: theme.colors.primary }]}
+          >
             {bird.name}
           </Text>
           <Chip icon="calendar" style={styles.chip}>
@@ -33,7 +42,6 @@ export default function BirdCard({ bird, onPress }: BirdCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
     marginBottom: 15,
   },
   image: {
@@ -44,7 +52,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   name: {
-    color: "#4CAF50",
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
