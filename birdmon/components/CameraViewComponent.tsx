@@ -27,6 +27,8 @@ export default function CameraViewComponent({
             onPress={onToggleFacing}
             style={styles.cameraButton}
             icon="camera-flip"
+            buttonColor="rgba(76, 175, 80, 0.8)"
+            textColor="#fff"
           >
             Flip
           </Button>
@@ -47,6 +49,8 @@ export default function CameraViewComponent({
           onPress={onTakePicture}
           style={[styles.controlButton, styles.captureButton]}
           icon="camera"
+          buttonColor="#4CAF50"
+          textColor="#fff"
         >
           Capture
         </Button>
@@ -58,6 +62,7 @@ export default function CameraViewComponent({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
   },
   camera: {
     flex: 1,
@@ -68,7 +73,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   cameraButton: {
-    backgroundColor: "rgba(76, 175, 80, 0.8)",
+    // buttonColor applied via prop
   },
   bottomControls: {
     flexDirection: "row",
@@ -81,6 +86,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   captureButton: {
-    backgroundColor: "#4CAF50",
+    // buttonColor applied via prop
   },
 });

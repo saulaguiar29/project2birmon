@@ -1,9 +1,7 @@
 import React from "react";
-import ThemedView from "../../contexts/ThemedView";
-import ThemedText from "../../contexts/ThemedText";
-import { useTheme } from "../../contexts/ThemeContext";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Switch, Divider } from "react-native-paper";
+import { Text, Switch, Divider, Card } from "react-native-paper";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function Settings() {
   const { isDarkMode, toggleTheme, theme } = useTheme();
@@ -12,36 +10,71 @@ export default function Settings() {
     <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <ThemedView style={styles.card}>
-        <ThemedText color="primary" style={styles.sectionTitle}>
-          Appearance
-        </ThemedText>
-        <View style={styles.settingRow}>
-          <View style={styles.settingInfo}>
-            <ThemedText color="onSurface" style={styles.sectionTitle}>
-              Dark Mode
-            </ThemedText>
-            <ThemedText color="onSurfaceVariant" style={styles.settingDesc}>
-              {isDarkMode ? "Dark theme enabled" : "Light theme enabled"}
-            </ThemedText>
+      <Card
+        style={[styles.card, { backgroundColor: theme.colors.surface }]}
+        elevation={2}
+      >
+        <Card.Content>
+          <Text
+            variant="titleMedium"
+            style={[styles.sectionTitle, { color: theme.colors.primary }]}
+          >
+            Appearance
+          </Text>
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Text
+                variant="bodyLarge"
+                style={[styles.settingLabel, { color: theme.colors.onSurface }]}
+              >
+                Dark Mode
+              </Text>
+              <Text
+                variant="bodyMedium"
+                style={[
+                  styles.settingDesc,
+                  { color: theme.colors.onSurfaceVariant },
+                ]}
+              >
+                {isDarkMode ? "Dark theme enabled" : "Light theme enabled"}
+              </Text>
+            </View>
+            <Switch
+              value={isDarkMode}
+              onValueChange={toggleTheme}
+              color={theme.colors.primary}
+            />
           </View>
-          <Switch value={isDarkMode} onValueChange={toggleTheme} />
-        </View>
-      </ThemedView>
+        </Card.Content>
+      </Card>
 
-      <ThemedView style={styles.card}>
-        <ThemedText color="primary" style={styles.sectionTitle}>
-          About
-        </ThemedText>
-        <Divider style={styles.divider} />
-        <ThemedText color="onSurface" style={styles.aboutText}>
-          BirdMon is your personal bird collection app. Capture, catalog, and
-          cherish your bird sightings!
-        </ThemedText>
-        <ThemedText color="onSurfaceVariant" style={styles.version}>
-          Version 1.0.0
-        </ThemedText>
-      </ThemedView>
+      <Card
+        style={[styles.card, { backgroundColor: theme.colors.surface }]}
+        elevation={2}
+      >
+        <Card.Content>
+          <Text
+            variant="titleMedium"
+            style={[styles.sectionTitle, { color: theme.colors.primary }]}
+          >
+            About
+          </Text>
+          <Divider style={styles.divider} />
+          <Text
+            variant="bodyLarge"
+            style={[styles.aboutText, { color: theme.colors.onSurface }]}
+          >
+            BirdMon is your personal bird collection app. Capture, catalog, and
+            cherish your bird sightings!
+          </Text>
+          <Text
+            variant="bodyMedium"
+            style={[styles.version, { color: theme.colors.onSurfaceVariant }]}
+          >
+            Version 1.0.0
+          </Text>
+        </Card.Content>
+      </Card>
     </ScrollView>
   );
 }
@@ -68,6 +101,11 @@ const styles = StyleSheet.create({
   settingInfo: {
     flex: 1,
     marginRight: 15,
+  },
+  settingLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 4,
   },
   settingDesc: {
     fontSize: 14,

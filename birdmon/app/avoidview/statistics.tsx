@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Card, Divider } from "react-native-paper";
+import { Card, Divider, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BirdData } from "../index";
-import ThemedView from "../../contexts/ThemedView";
-import ThemedText from "../../contexts/ThemedText";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useFocusEffect } from "expo-router";
 
@@ -99,23 +97,27 @@ export default function Statistics() {
   const StatCard = ({
     title,
     value,
-    icon,
   }: {
     title: string;
     value: string | number;
-    icon: string;
   }) => (
     <Card
       style={[styles.statCard, { backgroundColor: theme.colors.surface }]}
       elevation={2}
     >
       <Card.Content style={styles.statContent}>
-        <ThemedText color="onSurfaceVariant" style={styles.statTitle}>
+        <Text
+          variant="bodyLarge"
+          style={[styles.statTitle, { color: theme.colors.onSurfaceVariant }]}
+        >
           {title}
-        </ThemedText>
-        <ThemedText color="primary" style={styles.statValue}>
+        </Text>
+        <Text
+          variant="displaySmall"
+          style={[styles.statValue, { color: theme.colors.primary }]}
+        >
           {value}
-        </ThemedText>
+        </Text>
       </Card.Content>
     </Card>
   );
@@ -124,88 +126,155 @@ export default function Statistics() {
     <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <ThemedView style={styles.section}>
-        <ThemedText color="primary" style={styles.sectionTitle}>
-          Collection Overview
-        </ThemedText>
-        <Divider style={styles.divider} />
+      <Card
+        style={[styles.section, { backgroundColor: theme.colors.surface }]}
+        elevation={1}
+      >
+        <Card.Content>
+          <Text
+            variant="titleLarge"
+            style={[styles.sectionTitle, { color: theme.colors.primary }]}
+          >
+            Collection Overview
+          </Text>
+          <Divider style={styles.divider} />
 
-        <View style={styles.statsGrid}>
-          <StatCard title="Total Birds" value={stats.totalBirds} icon="bird" />
-          <StatCard
-            title="This Month"
-            value={stats.birdsThisMonth}
-            icon="calendar"
-          />
-          <StatCard
-            title="Locations Visited"
-            value={stats.uniqueLocations}
-            icon="map-marker"
-          />
-        </View>
-      </ThemedView>
+          <View style={styles.statsGrid}>
+            <StatCard title="Total Birds" value={stats.totalBirds} />
+            <StatCard title="This Month" value={stats.birdsThisMonth} />
+            <StatCard title="Locations Visited" value={stats.uniqueLocations} />
+          </View>
+        </Card.Content>
+      </Card>
 
-      <ThemedView style={styles.section}>
-        <ThemedText color="primary" style={styles.sectionTitle}>
-          Capture History
-        </ThemedText>
-        <Divider style={styles.divider} />
+      <Card
+        style={[styles.section, { backgroundColor: theme.colors.surface }]}
+        elevation={1}
+      >
+        <Card.Content>
+          <Text
+            variant="titleLarge"
+            style={[styles.sectionTitle, { color: theme.colors.primary }]}
+          >
+            Capture History
+          </Text>
+          <Divider style={styles.divider} />
 
-        <View style={styles.detailRow}>
-          <ThemedText color="onSurface" style={styles.detailLabel}>
-            First Capture:
-          </ThemedText>
-          <ThemedText color="onSurfaceVariant" style={styles.detailValue}>
-            {stats.firstCaptureDate || "No captures yet"}
-          </ThemedText>
-        </View>
+          <View style={styles.detailRow}>
+            <Text
+              variant="bodyLarge"
+              style={[styles.detailLabel, { color: theme.colors.onSurface }]}
+            >
+              First Capture:
+            </Text>
+            <Text
+              variant="bodyLarge"
+              style={[
+                styles.detailValue,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
+            >
+              {stats.firstCaptureDate || "No captures yet"}
+            </Text>
+          </View>
 
-        <View style={styles.detailRow}>
-          <ThemedText color="onSurface" style={styles.detailLabel}>
-            Most Recent:
-          </ThemedText>
-          <ThemedText color="onSurfaceVariant" style={styles.detailValue}>
-            {stats.lastCaptureDate || "No captures yet"}
-          </ThemedText>
-        </View>
+          <View style={styles.detailRow}>
+            <Text
+              variant="bodyLarge"
+              style={[styles.detailLabel, { color: theme.colors.onSurface }]}
+            >
+              Most Recent:
+            </Text>
+            <Text
+              variant="bodyLarge"
+              style={[
+                styles.detailValue,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
+            >
+              {stats.lastCaptureDate || "No captures yet"}
+            </Text>
+          </View>
 
-        <View style={styles.detailRow}>
-          <ThemedText color="onSurface" style={styles.detailLabel}>
-            Favorite Location:
-          </ThemedText>
-          <ThemedText color="onSurfaceVariant" style={styles.detailValue}>
-            {stats.mostCommonLocation || "No location data"}
-          </ThemedText>
-        </View>
-      </ThemedView>
+          <View style={styles.detailRow}>
+            <Text
+              variant="bodyLarge"
+              style={[styles.detailLabel, { color: theme.colors.onSurface }]}
+            >
+              Favorite Location:
+            </Text>
+            <Text
+              variant="bodyLarge"
+              style={[
+                styles.detailValue,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
+            >
+              {stats.mostCommonLocation || "No location data"}
+            </Text>
+          </View>
+        </Card.Content>
+      </Card>
 
-      <ThemedView style={styles.section}>
-        <ThemedText color="primary" style={styles.sectionTitle}>
-          Achievements
-        </ThemedText>
-        <Divider style={styles.divider} />
+      <Card
+        style={[styles.section, { backgroundColor: theme.colors.surface }]}
+        elevation={1}
+      >
+        <Card.Content>
+          <Text
+            variant="titleLarge"
+            style={[styles.sectionTitle, { color: theme.colors.primary }]}
+          >
+            Achievements
+          </Text>
+          <Divider style={styles.divider} />
 
-        <View style={styles.achievementRow}>
-          <ThemedText color="onSurface" style={styles.achievementText}>
-            {stats.totalBirds >= 1 ? "✓" : "○"} First Bird Captured
-          </ThemedText>
-        </View>
-        <View style={styles.achievementRow}>
-          <ThemedText color="onSurface" style={styles.achievementText}>
-            {stats.totalBirds >= 5 ? "✓" : "○"} 5 Birds Collected
-          </ThemedText>
-        </View>
-        <View style={styles.achievementRow}>
-          <ThemedText color="onSurface" style={styles.achievementText}>
-            {stats.totalBirds >= 10 ? "✓" : "○"} 10 Birds Collected
-          </ThemedText>
-        </View>
-        <View style={styles.achievementRow}>
-          <ThemedText color="onSurface" style={styles.achievementText}>
-            {stats.uniqueLocations >= 3 ? "✓" : "○"} Explorer (3+ Locations)
-          </ThemedText>
-        </View>
-      </ThemedView>
+          <View style={styles.achievementRow}>
+            <Text
+              variant="bodyLarge"
+              style={[
+                styles.achievementText,
+                { color: theme.colors.onSurface },
+              ]}
+            >
+              {stats.totalBirds >= 1 ? "✓" : "○"} First Bird Captured
+            </Text>
+          </View>
+          <View style={styles.achievementRow}>
+            <Text
+              variant="bodyLarge"
+              style={[
+                styles.achievementText,
+                { color: theme.colors.onSurface },
+              ]}
+            >
+              {stats.totalBirds >= 5 ? "✓" : "○"} 5 Birds Collected
+            </Text>
+          </View>
+          <View style={styles.achievementRow}>
+            <Text
+              variant="bodyLarge"
+              style={[
+                styles.achievementText,
+                { color: theme.colors.onSurface },
+              ]}
+            >
+              {stats.totalBirds >= 10 ? "✓" : "○"} 10 Birds Collected
+            </Text>
+          </View>
+          <View style={styles.achievementRow}>
+            <Text
+              variant="bodyLarge"
+              style={[
+                styles.achievementText,
+                { color: theme.colors.onSurface },
+              ]}
+            >
+              {stats.uniqueLocations >= 3 ? "✓" : "○"} Explorer (3+ Locations)
+            </Text>
+          </View>
+        </Card.Content>
+      </Card>
     </ScrollView>
   );
 }
@@ -221,7 +290,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontWeight: "bold",
     marginBottom: 15,
-    fontSize: 18,
   },
   divider: {
     marginBottom: 15,
@@ -241,7 +309,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   statValue: {
-    fontSize: 32,
     fontWeight: "bold",
   },
   detailRow: {
@@ -249,21 +316,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   detailLabel: {
-    fontSize: 16,
     fontWeight: "500",
   },
   detailValue: {
-    fontSize: 16,
+    // Dynamic color applied
   },
   achievementRow: {
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   achievementText: {
-    fontSize: 16,
+    // Dynamic color applied
   },
 });

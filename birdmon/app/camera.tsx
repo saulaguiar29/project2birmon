@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,7 +7,7 @@ import {
   Platform,
 } from "react-native";
 import { Text, Button } from "react-native-paper";
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { CameraType } from "expo-camera";
 import { router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,8 +25,17 @@ export default function Camera() {
   const [isSaving, setIsSaving] = useState(false);
   const { theme } = useTheme();
   const { cameraRef, hasCameraPermission, requestPermissions } = useCamera();
+
   if (hasCameraPermission === null) {
-    return <View />;
+    return (
+      <View
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
+        <Text style={[styles.message, { color: theme.colors.onBackground }]}>
+          Loading camera...
+        </Text>
+      </View>
+    );
   }
 
   if (!hasCameraPermission) {
@@ -37,7 +46,13 @@ export default function Camera() {
         <Text style={[styles.message, { color: theme.colors.onBackground }]}>
           We need your permission to show the camera
         </Text>
-        <Button onPress={requestPermissions}>Grant Permission</Button>
+        <Button
+          mode="contained"
+          onPress={requestPermissions}
+          style={{ backgroundColor: theme.colors.primary }}
+        >
+          Grant Permission
+        </Button>
       </View>
     );
   }
@@ -171,9 +186,12 @@ export default function Camera() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   message: {
     textAlign: "center",
     paddingBottom: 10,
+    paddingHorizontal: 20,
   },
 });

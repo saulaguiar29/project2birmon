@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { Text, Card, Button, Chip } from "react-native-paper";
 import { router, useLocalSearchParams } from "expo-router";
-import { BirdData } from "./index";
+import { BirdData } from "../index"; // FIXED: Changed from "./index" to "../index"
 
 export default function CardDetail() {
   const { birdData } = useLocalSearchParams();
