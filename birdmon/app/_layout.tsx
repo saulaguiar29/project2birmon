@@ -20,9 +20,18 @@ function StackNavigator() {
       >
         <Stack.Screen name="index" options={{ title: "BirdMon Collection" }} />
         <Stack.Screen name="camera" options={{ title: "Capture Bird" }} />
-        <Stack.Screen name="card-detail" options={{ title: "Bird Details" }} />
-        <Stack.Screen name="statistics" options={{ title: "Statistics" }} />
-        <Stack.Screen name="settings" options={{ title: "Settings" }} />
+        <Stack.Screen
+          name="avoidview/card-detail"
+          options={{ title: "Bird Details" }}
+        />
+        <Stack.Screen
+          name="avoidview/statistics"
+          options={{ title: "Statistics" }}
+        />
+        <Stack.Screen
+          name="avoidview/settings"
+          options={{ title: "Settings" }}
+        />
       </Stack>
     </PaperProvider>
   );

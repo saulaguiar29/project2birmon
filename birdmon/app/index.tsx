@@ -63,7 +63,7 @@ export default function Index() {
 
   const handleCardPress = (bird: BirdData) => {
     router.push({
-      pathname: "./card-detail",
+      pathname: "./avoidview/card-detail",
       params: { birdData: JSON.stringify(bird) },
     });
   };
@@ -95,14 +95,14 @@ export default function Index() {
             <IconButton
               icon="chart-bar"
               size={24}
-              onPress={() => router.push("./statistics")}
+              onPress={() => router.push("./avoidview/statistics")}
               iconColor={theme.colors.primary}
               style={styles.headerButton}
             />
             <IconButton
               icon="cog"
               size={24}
-              onPress={() => router.push("./settings")}
+              onPress={() => router.push("./avoidview/settings")}
               iconColor={theme.colors.primary}
               style={styles.headerButton}
             />
