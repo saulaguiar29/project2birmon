@@ -20,8 +20,10 @@ export default function Settings() {
         </ThemedText>
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
-            <ThemedText color="onSurface">Dark Mode</ThemedText>
-            <ThemedText color="onSurface">
+            <ThemedText color="onSurface" style={styles.sectionTitle}>
+              Dark Mode
+            </ThemedText>
+            <ThemedText color="onSurfaceVariant" style={styles.settingDesc}>
               {isDarkMode ? "Dark theme enabled" : "Light theme enabled"}
             </ThemedText>
           </View>
@@ -105,6 +107,10 @@ const styles = StyleSheet.create({
   settingInfo: {
     flex: 1,
     marginRight: 15,
+  },
+  settingDesc: {
+    fontSize: 14,
+    marginTop: 4,
   },
   divider: {
     marginBottom: 10,
