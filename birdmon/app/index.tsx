@@ -74,7 +74,7 @@ export default function Index() {
     >
       <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
         <View style={styles.headerContent}>
-          <View>
+          <View style={styles.titleContainer}>
             <Text
               variant="headlineMedium"
               style={[styles.title, { color: theme.colors.primary }]}
@@ -91,12 +91,22 @@ export default function Index() {
               {birds.length} Bird{birds.length !== 1 ? "s" : ""} Captured
             </Text>
           </View>
-          <IconButton
-            icon="cog"
-            size={28}
-            onPress={() => router.push("./settings")}
-            iconColor={theme.colors.primary}
-          />
+          <View style={styles.headerButtons}>
+            <IconButton
+              icon="chart-bar"
+              size={24}
+              onPress={() => router.push("./statistics")}
+              iconColor={theme.colors.primary}
+              style={styles.headerButton}
+            />
+            <IconButton
+              icon="cog"
+              size={24}
+              onPress={() => router.push("./settings")}
+              iconColor={theme.colors.primary}
+              style={styles.headerButton}
+            />
+          </View>
         </View>
       </View>
 
@@ -169,6 +179,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  titleContainer: {
+    flex: 1,
+    marginRight: 8,
+  },
+  headerButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  headerButton: {
+    marginLeft: 0,
   },
   title: {
     fontWeight: "bold",

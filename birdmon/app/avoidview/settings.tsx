@@ -1,10 +1,9 @@
 import React from "react";
-import { ScrollView, StyleSheet, View, Pressable } from "react-native";
-import { Switch, Divider, List } from "react-native-paper";
-import { router } from "expo-router";
 import ThemedView from "../../contexts/ThemedView";
 import ThemedText from "../../contexts/ThemedText";
 import { useTheme } from "../../contexts/ThemeContext";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Switch, Divider } from "react-native-paper";
 
 export default function Settings() {
   const { isDarkMode, toggleTheme, theme } = useTheme();
@@ -13,7 +12,6 @@ export default function Settings() {
     <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {/* APPEARANCE SECTION */}
       <ThemedView style={styles.card}>
         <ThemedText color="primary" style={styles.sectionTitle}>
           Appearance
@@ -31,44 +29,6 @@ export default function Settings() {
         </View>
       </ThemedView>
 
-      {/* STATISTICS SECTION */}
-      <ThemedView style={styles.card}>
-        <ThemedText color="primary" style={styles.sectionTitle}>
-          Statistics
-        </ThemedText>
-        <Divider style={styles.divider} />
-
-        <Pressable
-          onPress={() => router.push("./statistics")}
-          style={({ pressed }) => [
-            styles.menuItem,
-            pressed && styles.menuItemPressed,
-          ]}
-        >
-          <List.Item
-            title="View Statistics"
-            description="See your collection stats and insights"
-            left={(props) => (
-              <List.Icon
-                {...props}
-                icon="chart-bar"
-                color={theme.colors.primary}
-              />
-            )}
-            right={(props) => (
-              <List.Icon
-                {...props}
-                icon="chevron-right"
-                color={theme.colors.onSurfaceVariant}
-              />
-            )}
-            titleStyle={{ color: theme.colors.onSurface }}
-            descriptionStyle={{ color: theme.colors.onSurfaceVariant }}
-          />
-        </Pressable>
-      </ThemedView>
-
-      {/* ABOUT SECTION */}
       <ThemedView style={styles.card}>
         <ThemedText color="primary" style={styles.sectionTitle}>
           About
@@ -78,7 +38,7 @@ export default function Settings() {
           BirdMon is your personal bird collection app. Capture, catalog, and
           cherish your bird sightings!
         </ThemedText>
-        <ThemedText color="onSurface" style={styles.version}>
+        <ThemedText color="onSurfaceVariant" style={styles.version}>
           Version 1.0.0
         </ThemedText>
       </ThemedView>
@@ -95,8 +55,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sectionTitle: {
-    fontWeight: "bold",
-    marginBottom: 15,
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
   },
   settingRow: {
     flexDirection: "row",
@@ -110,16 +71,9 @@ const styles = StyleSheet.create({
   },
   settingDesc: {
     fontSize: 14,
-    marginTop: 4,
   },
   divider: {
     marginBottom: 10,
-  },
-  menuItem: {
-    borderRadius: 8,
-  },
-  menuItemPressed: {
-    opacity: 0.7,
   },
   aboutText: {
     lineHeight: 22,

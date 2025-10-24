@@ -1,5 +1,11 @@
 import React, { useState, useRef } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Text, Button } from "react-native-paper";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { router } from "expo-router";
@@ -9,22 +15,21 @@ import { BirdData } from "./index";
 import CameraViewComponent from "../components/CameraViewComponent";
 import ImagePreviewForm from "../components/ImagePreviewForm";
 import { useTheme } from "../contexts/ThemeContext";
+import useCamera from "../hooks/useCamera";
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>("back");
-  const [permission, requestPermission] = useCameraPermissions();
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [birdName, setBirdName] = useState("");
   const [location, setLocation] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const cameraRef = useRef<CameraView>(null);
   const { theme } = useTheme();
-
-  if (!permission) {
+  const { cameraRef, hasCameraPermission, requestPermissions } = useCamera();
+  if (hasCameraPermission === null) {
     return <View />;
   }
 
-  if (!permission.granted) {
+  if (!hasCameraPermission) {
     return (
       <View
         style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -32,7 +37,7 @@ export default function Camera() {
         <Text style={[styles.message, { color: theme.colors.onBackground }]}>
           We need your permission to show the camera
         </Text>
-        <Button onPress={requestPermission}>Grant Permission</Button>
+        <Button onPress={requestPermissions}>Grant Permission</Button>
       </View>
     );
   }
@@ -128,16 +133,22 @@ export default function Camera() {
   // Show the image preview form if we have a captured image
   if (capturedImage) {
     return (
-      <ImagePreviewForm
-        imageUri={capturedImage}
-        birdName={birdName}
-        location={location}
-        isSaving={isSaving}
-        onBirdNameChange={setBirdName}
-        onLocationChange={setLocation}
-        onSave={saveBird}
-        onRetake={retake}
-      />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={100}
+      >
+        <ImagePreviewForm
+          imageUri={capturedImage}
+          birdName={birdName}
+          location={location}
+          isSaving={isSaving}
+          onBirdNameChange={setBirdName}
+          onLocationChange={setLocation}
+          onSave={saveBird}
+          onRetake={retake}
+        />
+      </KeyboardAvoidingView>
     );
   }
 
