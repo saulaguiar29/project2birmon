@@ -1,3 +1,6 @@
+Updated readme casual · MD
+Copy
+
 # BirdMon - Your Personal Bird Collection App
 
 ## Application Description
@@ -12,58 +15,65 @@ Key features include:
 - **Persistent Storage**: All your bird data is saved locally on your device using AsyncStorage
 - **Dark Mode**: Toggle between light and dark themes based on your preference
 - **Statistics Tracking**: Monitor your collection growth, favorite locations, and capture dates
-- **Card-Based UI**:vInteractive cards displaying your bird collection
+- **Card-Based UI**: Interactive cards displaying your bird collection
 - **Detailed Views**: Tap any bird to see details and stats
 
 ## Human Interface Guidelines Implementation
 
-### Platform Conventions and User Expectations
+I made sure to follow iOS and Android design guidelines to create an app that feels native and intuitive. Here's how I applied some key principles:
 
-BirdMon implements several iOS and Android Human Interface Guidelines principles:
+**[iOS HIG - Touch Targets](https://developer.apple.com/design/human-interface-guidelines/inputs/touchscreen-gestures)** (44x44 points minimum):
 
-**iOS HIG - Touch Targets (44x44 points minimum):**
+- Made all buttons at least 44x44pt so they're easy to tap. The settings and statistics icons in the header are 24pt but have padding to make the full touch area 48pt.
+- The camera FAB button is 56x56pt - nice and big so you can't miss it.
+- Camera controls are even bigger (56-72pt) since you're using them while trying to photograph birds.
 
-- All interactive buttons meet the 44x44pt minimum touch target size. For example, the IconButtons in the header (settings and statistics icons) are set to 24pt icon size with adequate padding to reach the 44pt target.
-- The Floating Action Button (FAB) for camera capture is 56x56pt, exceeding the minimum requirement.
-- All TextInput fields have sufficient height (48pt) for comfortable interaction.
+**[iOS HIG - Navigation](https://developer.apple.com/design/human-interface-guidelines/navigation):**
 
-**iOS HIG - Navigation:**
+- Used expo-router's Stack navigation which gives you the standard iOS back button with "< Back" text automatically.
+- The flow is straightforward: Collection → Camera/Settings/Statistics/Bird Details. Every screen has a way back.
+- Added an extra back button on the camera screen itself so you never feel stuck.
 
-- The app uses expo-router's Stack navigation which provides the standard iOS back button with "< Back" text in the navigation bar.
-- Navigation hierarchy is clear: Collection → Camera/Settings/Statistics, with each screen having a clear back path.
+**[iOS HIG - Feedback](https://developer.apple.com/design/human-interface-guidelines/feedback):**
 
-**iOS HIG - Feedback:**
+- Buttons change opacity when you press them (drops to 0.7) so you know something's happening.
+- Loading spinners show up when the app is saving your bird data.
+- Pop-up dialogs ask "are you sure?" before doing anything destructive like clearing your whole collection or discarding a photo - better safe than sorry!
 
-- Button presses provide visual feedback through opacity changes (0.7 opacity when pressed).
-- Loading states are shown with spinners when saving birds to storage.
-- Alert dialogs confirm destructive actions (clearing collection) before execution, following the HIG principle of "Ask permission before deleting user data."
+**[iOS HIG - Keyboards](https://developer.apple.com/design/human-interface-guidelines/keyboards):**
 
-**Android Material Design - Touch Targets (48x48 dp minimum):**
+- Used `KeyboardAvoidingView` so the keyboard never covers up the text fields when you're typing in bird names.
+- Set it up differently for iOS (uses "padding") and Android (uses "height") since they handle keyboards differently.
+- The text fields stay visible while you're typing - super annoying when apps don't do this right!
 
-- All buttons and interactive elements meet the 48dp minimum touch target.
-- Cards have 8dp elevation for visual hierarchy.
-- The FAB follows Material Design placement guidelines (16dp margin from edges).
+**[iOS HIG - Layout](https://developer.apple.com/design/human-interface-guidelines/layout):**
 
-**Android Material Design - Typography:**
+- Used `react-native-safe-area-context` to handle all the weird screen shapes (iPhone notches, home indicators, etc.).
+- Camera controls sit below the notch at the top and above the home indicator at the bottom.
+- Works properly on iPhone 12+ with notches, older iPhones without them, and Android phones.
 
-- Uses Material Design 3 type scale with proper hierarchy (headlineMedium, titleLarge, bodyMedium).
-- Text automatically scales based on user accessibility settings.
+**[Material Design - Touch Targets](https://m3.material.io/foundations/interaction/gestures)** (48x48 dp minimum):
 
-**Cross-Platform - Color Contrast (WCAG AA):**
+- All Android buttons are at least 48dp - same idea as iOS but slightly bigger minimum.
+- Cards have that nice Material Design shadow (4dp elevation) to make them feel raised off the screen.
+- The FAB sits 16dp from the edge like Material Design recommends.
 
-- Primary green (#4CAF50) provides 4.5:1 contrast ratio against white backgrounds.
-- Dark mode uses lighter green (#66BB6A) to maintain contrast on dark backgrounds.
-- All text meets WCAG AA standards for readability.
+**[Material Design - Typography](https://m3.material.io/styles/typography/overview):**
 
-**iOS HIG - Keyboard Management:**
+- Used Material Design 3's type scale (`headlineMedium`, `titleLarge`, `bodyMedium`) to keep text sizing consistent.
+- Text automatically gets bigger or smaller if users change their phone's accessibility settings.
 
-- Camera screen uses KeyboardAvoidingView to prevent the keyboard from obscuring input fields.
-- Follows iOS behavior with "padding" and Android with "height" strategies.
+**[WCAG - Color Contrast](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)** (AA Standard):
 
-**iOS HIG & Material Design - Visual Hierarchy:**
+- The main green (#4CAF50) has a 4.5:1 contrast ratio against white - passes accessibility standards.
+- Dark mode uses lighter colors (#81C784, #E0E0E0) that still have great contrast (7.2:1+) on dark backgrounds.
+- Made sure all the text is readable in both light and dark mode by checking contrast ratios.
+- The colored chips use Material Design 3's container colors which automatically have good contrast.
 
-- Card-based layout provides clear content grouping.
-- Proper spacing and padding (15-20px) creates visual breathing room.
-- Icons consistently accompany text labels for better scannability.
+**Visual Hierarchy:**
+
+- Kept spacing consistent (15-20px between things) so the layout doesn't feel cramped.
+- Added icons next to text labels throughout the app - makes things way easier to scan.
+- Used rounded corners (8-24dp) and shadows (2-12dp) to create depth and show what's interactive.
 
 ![Card Prototype](./cardprototype.png)
