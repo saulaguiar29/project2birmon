@@ -1,7 +1,14 @@
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Button, TextInput, Card } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface ImagePreviewFormProps {
   imageUri: string;
@@ -25,15 +32,26 @@ export default function ImagePreviewForm({
   onRetake,
 }: ImagePreviewFormProps) {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+    >
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        <Card style={styles.previewCard}>
+        <Card
+          style={[
+            styles.previewCard,
+            { backgroundColor: theme.colors.surface },
+          ]}
+        >
           <Card.Cover source={{ uri: imageUri }} style={styles.previewImage} />
           <Card.Content style={styles.formContainer}>
             <TextInput
@@ -45,6 +63,9 @@ export default function ImagePreviewForm({
               autoFocus
               returnKeyType="next"
               disabled={isSaving}
+              outlineColor={theme.colors.outline}
+              activeOutlineColor={theme.colors.primary}
+              textColor={theme.colors.onSurface}
             />
             <TextInput
               label="Location (Optional)"
@@ -54,16 +75,23 @@ export default function ImagePreviewForm({
               style={styles.input}
               returnKeyType="done"
               disabled={isSaving}
+              outlineColor={theme.colors.outline}
+              activeOutlineColor={theme.colors.primary}
+              textColor={theme.colors.onSurface}
             />
           </Card.Content>
         </Card>
       </ScrollView>
 
-      {/* Fixed button container at bottom */}
+      {/* Fixed button container at bottom - themed */}
       <View
         style={[
           styles.buttonContainer,
-          { paddingBottom: Math.max(insets.bottom, 16) + 8 },
+          {
+            paddingBottom: Math.max(insets.bottom, 16) + 8,
+            backgroundColor: theme.colors.surface,
+            borderTopColor: theme.colors.outline,
+          },
         ]}
       >
         <Button
@@ -72,34 +100,37 @@ export default function ImagePreviewForm({
           style={styles.button}
           disabled={isSaving}
           icon="camera-retake"
+          textColor={theme.colors.primary}
+          buttonColor="transparent"
         >
           Retake
         </Button>
         <Button
           mode="contained"
           onPress={onSave}
-          style={[styles.button, styles.saveButton]}
+          style={[styles.button, { backgroundColor: theme.colors.primary }]}
           loading={isSaving}
           disabled={isSaving}
           icon="check"
+          textColor={theme.colors.onPrimary}
         >
           Save to Collection
         </Button>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100, // Space for fixed buttons
+    paddingBottom: 120, // Extra space for fixed buttons + keyboard
+    flexGrow: 1,
   },
   previewCard: {
     margin: 16,
@@ -113,6 +144,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 16,
+    backgroundColor: "transparent", // Prevent white flash
   },
   buttonContainer: {
     position: "absolute",
@@ -122,9 +154,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 16,
     paddingTop: 16,
-    backgroundColor: "#fff",
     borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
     gap: 12,
     elevation: 8,
     shadowColor: "#000",
@@ -135,8 +165,5 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     minHeight: 48,
-  },
-  saveButton: {
-    //
   },
 });

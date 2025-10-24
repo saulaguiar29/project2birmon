@@ -10,28 +10,49 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Custom themes
+// Custom light theme
 const lightTheme = {
   ...MD3LightTheme,
   colors: {
     ...MD3LightTheme.colors,
     primary: "#4CAF50",
+    onPrimary: "#FFFFFF",
+    primaryContainer: "#C8E6C9",
+    onPrimaryContainer: "#1B5E20",
     secondary: "#8BC34A",
-    background: "#f5f5f5",
-    surface: "#ffffff",
-    text: "#000000",
+    onSecondary: "#FFFFFF",
+    secondaryContainer: "#DCEDC8",
+    onSecondaryContainer: "#33691E",
+    background: "#F5F5F5",
+    onBackground: "#1A1A1A",
+    surface: "#FFFFFF",
+    onSurface: "#1A1A1A",
+    surfaceVariant: "#F5F5F5",
+    onSurfaceVariant: "#424242",
+    outline: "#E0E0E0",
   },
 };
 
+// Custom dark theme with better contrast
 const darkTheme = {
   ...MD3DarkTheme,
   colors: {
     ...MD3DarkTheme.colors,
-    primary: "#66BB6A",
-    secondary: "#9CCC65",
+    primary: "#81C784",
+    onPrimary: "#1B5E20",
+    primaryContainer: "#2E7D32",
+    onPrimaryContainer: "#E8F5E9",
+    secondary: "#AED581",
+    onSecondary: "#33691E",
+    secondaryContainer: "#558B2F",
+    onSecondaryContainer: "#F1F8E9",
     background: "#121212",
+    onBackground: "#E0E0E0",
     surface: "#1E1E1E",
-    text: "#FFFFFF",
+    onSurface: "#E0E0E0",
+    surfaceVariant: "#2C2C2C",
+    onSurfaceVariant: "#BDBDBD",
+    outline: "#424242",
   },
 };
 

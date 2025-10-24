@@ -18,7 +18,12 @@ export default function BirdCard({ bird, onPress }: BirdCardProps) {
         style={[styles.card, { backgroundColor: theme.colors.surface }]}
         elevation={4}
       >
-        <Card.Cover source={{ uri: bird.imageUri }} style={styles.image} />
+        <Card.Cover
+          source={{ uri: bird.imageUri }}
+          style={styles.image}
+          accessible={true}
+          accessibilityLabel={`Photo of ${bird.name}`}
+        />
         <Card.Content style={styles.content}>
           <Text
             variant="titleLarge"
@@ -26,11 +31,25 @@ export default function BirdCard({ bird, onPress }: BirdCardProps) {
           >
             {bird.name}
           </Text>
-          <Chip icon="calendar" style={styles.chip}>
+          <Chip
+            icon="calendar"
+            style={[
+              styles.chip,
+              { backgroundColor: theme.colors.primaryContainer },
+            ]}
+            textStyle={{ color: theme.colors.onPrimaryContainer }}
+          >
             {bird.dateCaptured}
           </Chip>
           {bird.location && (
-            <Chip icon="map-marker" style={styles.locationChip}>
+            <Chip
+              icon="map-marker"
+              style={[
+                styles.locationChip,
+                { backgroundColor: theme.colors.secondaryContainer },
+              ]}
+              textStyle={{ color: theme.colors.onSecondaryContainer }}
+            >
               {bird.location}
             </Chip>
           )}
@@ -58,9 +77,8 @@ const styles = StyleSheet.create({
   },
   chip: {
     marginBottom: 5,
-    backgroundColor: "#e8f5e8",
   },
   locationChip: {
-    backgroundColor: "#fff3e0",
+    // backgroundColor applied dynamically
   },
 });

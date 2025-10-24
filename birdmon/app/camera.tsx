@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  StatusBar,
-} from "react-native";
+import { View, StyleSheet, Alert, StatusBar } from "react-native";
 import { Text, Button, IconButton } from "react-native-paper";
 import { CameraType } from "expo-camera";
 import { router } from "expo-router";
@@ -177,29 +170,37 @@ export default function Camera() {
   // Show the image preview form if we have a captured image
   if (capturedImage) {
     return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={100}
+      <View
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
-        {/* Back button for preview screen */}
-        <View style={[styles.previewHeader, { paddingTop: insets.top + 8 }]}>
+        {/* Themed header for preview screen */}
+        <View
+          style={[
+            styles.previewHeader,
+            {
+              paddingTop: insets.top + 8,
+              backgroundColor: theme.colors.surface,
+              borderBottomColor: theme.colors.outline,
+            },
+          ]}
+        >
           <IconButton
             icon="close"
             size={24}
-            iconColor={theme.colors.onBackground}
+            iconColor={theme.colors.onSurface}
             onPress={handleCancelCapture}
             accessibilityLabel="Cancel and go back"
           />
           <Text
             variant="titleMedium"
-            style={{ color: theme.colors.onBackground }}
+            style={{ color: theme.colors.onSurface, fontWeight: "600" }}
           >
             Add Bird Details
           </Text>
           <View style={{ width: 48 }} />
         </View>
 
+        {/* ImagePreviewForm now handles KeyboardAvoidingView internally */}
         <ImagePreviewForm
           imageUri={capturedImage}
           birdName={birdName}
@@ -210,7 +211,7 @@ export default function Camera() {
           onSave={saveBird}
           onRetake={retake}
         />
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 
@@ -290,6 +291,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 8,
     paddingBottom: 8,
-    backgroundColor: "transparent",
+    borderBottomWidth: 1,
   },
 });

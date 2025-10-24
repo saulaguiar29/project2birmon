@@ -1,8 +1,9 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { IconButton } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { IconButton, Text } from "react-native-paper";
 import { CameraView, CameraType } from "expo-camera";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface CameraViewComponentProps {
   facing: CameraType;
@@ -22,6 +23,7 @@ export default function CameraViewComponent({
   bottomInset = 0,
 }: CameraViewComponentProps) {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
 
   return (
     <View style={styles.container}>
@@ -41,12 +43,14 @@ export default function CameraViewComponent({
         </View>
       </CameraView>
 
-      {/* Bottom controls - positioned above safe area */}
+      {/* Bottom controls - themed for dark mode */}
       <View
         style={[
           styles.bottomControls,
           {
             paddingBottom: Math.max(bottomInset, 16) + 8,
+            backgroundColor: theme.colors.surface,
+            borderTopColor: theme.colors.outline,
           },
         ]}
       >
@@ -61,7 +65,9 @@ export default function CameraViewComponent({
             onPress={onPickImage}
             style={styles.controlButton}
           />
-          <Text style={styles.buttonLabel}>Import</Text>
+          <Text style={[styles.buttonLabel, { color: theme.colors.onSurface }]}>
+            Import
+          </Text>
         </View>
 
         {/* Capture button - larger and prominent */}
@@ -71,11 +77,19 @@ export default function CameraViewComponent({
             mode="contained"
             size={36}
             iconColor="#fff"
-            containerColor="#4CAF50"
+            containerColor={theme.colors.primary}
             onPress={onTakePicture}
             style={styles.captureButton}
           />
-          <Text style={[styles.buttonLabel, styles.captureLabel]}>Capture</Text>
+          <Text
+            style={[
+              styles.buttonLabel,
+              styles.captureLabel,
+              { color: theme.colors.primary },
+            ]}
+          >
+            Capture
+          </Text>
         </View>
 
         {/* Empty space for balance */}
@@ -120,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 24,
     paddingTop: 20,
-    backgroundColor: "#fff",
+    borderTopWidth: 1,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     elevation: 12,
@@ -145,11 +159,9 @@ const styles = StyleSheet.create({
   buttonLabel: {
     marginTop: 4,
     fontSize: 12,
-    color: "#666",
     fontWeight: "500",
   },
   captureLabel: {
-    color: "#4CAF50",
     fontWeight: "600",
     fontSize: 13,
   },
