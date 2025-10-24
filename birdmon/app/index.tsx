@@ -78,6 +78,7 @@ export default function Index() {
             <Text
               variant="headlineMedium"
               style={[styles.title, { color: theme.colors.primary }]}
+              numberOfLines={1}
             >
               Your BirdMon Collection
             </Text>
@@ -98,6 +99,7 @@ export default function Index() {
               onPress={() => router.push("./avoidview/statistics")}
               iconColor={theme.colors.primary}
               style={styles.headerButton}
+              accessibilityLabel="View statistics"
             />
             <IconButton
               icon="cog"
@@ -105,6 +107,7 @@ export default function Index() {
               onPress={() => router.push("./avoidview/settings")}
               iconColor={theme.colors.primary}
               style={styles.headerButton}
+              accessibilityLabel="Open settings"
             />
           </View>
         </View>
@@ -172,6 +175,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
+    paddingBottom: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
   },
@@ -182,17 +186,20 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
-    marginRight: 8,
+    marginRight: 12, // FIXED: Increased from 8 to 12 for more breathing room
+    minWidth: 0, // FIXED: Allows text to shrink and ellipsize
   },
   headerButtons: {
     flexDirection: "row",
     alignItems: "center",
+    flexShrink: 0, // FIXED: Prevents buttons from shrinking
   },
   headerButton: {
-    marginLeft: 0,
+    margin: 0, // FIXED: Changed from marginLeft to margin for consistency
   },
   title: {
     fontWeight: "bold",
+    // FIXED: Text will now ellipsize with ... if too long
   },
   subtitle: {
     marginTop: 5,

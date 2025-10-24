@@ -5,8 +5,9 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from "react-native";
-import { Text, Button } from "react-native-paper";
+import { Text, Button, IconButton } from "react-native-paper";
 import { CameraType } from "expo-camera";
 import { router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
@@ -16,6 +17,7 @@ import CameraViewComponent from "../components/CameraViewComponent";
 import ImagePreviewForm from "../components/ImagePreviewForm";
 import { useTheme } from "../contexts/ThemeContext";
 import useCamera from "../hooks/useCamera";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>("back");
@@ -25,6 +27,7 @@ export default function Camera() {
   const [isSaving, setIsSaving] = useState(false);
   const { theme } = useTheme();
   const { cameraRef, hasCameraPermission, requestPermissions } = useCamera();
+  const insets = useSafeAreaInsets();
 
   if (hasCameraPermission === null) {
     return (
@@ -41,7 +44,10 @@ export default function Camera() {
   if (!hasCameraPermission) {
     return (
       <View
-        style={[styles.container, { backgroundColor: theme.colors.background }]}
+        style={[
+          styles.permissionContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
       >
         <Text style={[styles.message, { color: theme.colors.onBackground }]}>
           We need your permission to show the camera
@@ -49,7 +55,7 @@ export default function Camera() {
         <Button
           mode="contained"
           onPress={requestPermissions}
-          style={{ backgroundColor: theme.colors.primary }}
+          style={{ backgroundColor: theme.colors.primary, marginTop: 20 }}
         >
           Grant Permission
         </Button>
@@ -60,6 +66,29 @@ export default function Camera() {
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
+
+  const handleGoBack = () => {
+    router.back();
+  };
+
+  const handleCancelCapture = () => {
+    Alert.alert(
+      "Discard Photo?",
+      "Are you sure you want to discard this photo?",
+      [
+        { text: "Keep Editing", style: "cancel" },
+        {
+          text: "Discard",
+          style: "destructive",
+          onPress: () => {
+            setCapturedImage(null);
+            setBirdName("");
+            setLocation("");
+          },
+        },
+      ]
+    );
+  };
 
   const takePicture = async () => {
     if (cameraRef.current) {
@@ -153,6 +182,24 @@ export default function Camera() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={100}
       >
+        {/* Back button for preview screen */}
+        <View style={[styles.previewHeader, { paddingTop: insets.top + 8 }]}>
+          <IconButton
+            icon="close"
+            size={24}
+            iconColor={theme.colors.onBackground}
+            onPress={handleCancelCapture}
+            accessibilityLabel="Cancel and go back"
+          />
+          <Text
+            variant="titleMedium"
+            style={{ color: theme.colors.onBackground }}
+          >
+            Add Bird Details
+          </Text>
+          <View style={{ width: 48 }} />
+        </View>
+
         <ImagePreviewForm
           imageUri={capturedImage}
           birdName={birdName}
@@ -167,31 +214,82 @@ export default function Camera() {
     );
   }
 
-  // Show the camera view
+  // Show the camera view - TRULY FULL SCREEN
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
+    <View style={styles.fullScreenContainer}>
+      <StatusBar hidden />
+
+      {/* Back button overlay on camera */}
+      <View style={[styles.cameraHeader, { paddingTop: insets.top + 8 }]}>
+        <IconButton
+          icon="arrow-left"
+          size={28}
+          iconColor="#fff"
+          containerColor="rgba(0, 0, 0, 0.5)"
+          onPress={handleGoBack}
+          style={styles.backButton}
+          accessibilityLabel="Go back to collection"
+        />
+      </View>
+
       <CameraViewComponent
         facing={facing}
         cameraRef={cameraRef}
         onToggleFacing={toggleCameraFacing}
         onTakePicture={takePicture}
         onPickImage={pickImage}
+        bottomInset={insets.bottom}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  fullScreenContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "#000",
+  },
   container: {
+    flex: 1,
+  },
+  permissionContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
   message: {
     textAlign: "center",
     paddingBottom: 10,
     paddingHorizontal: 20,
+    fontSize: 16,
+  },
+  cameraHeader: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20,
+    flexDirection: "row",
+    paddingHorizontal: 8,
+  },
+  backButton: {
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  previewHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+    backgroundColor: "transparent",
   },
 });

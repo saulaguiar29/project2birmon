@@ -1,120 +1,109 @@
-import { useMemo, useCallback } from "react";
+import { useMemo } from "react";
+import { BirdData } from "../app/index";
 
-export type Observation = {
-  id: string;
-  species: string;
-  timestamp: string; // ISO string
-  // optional extra fields that other parts of the app may include
-  [key: string]: any;
-};
-
-export type DayCount = {
-  date: string; // YYYY-MM-DD
-  count: number;
-};
-
-export type Stats = {
-  totalCount: number;
-  speciesCounts: Record<string, number>;
-  percentBySpecies: Record<string, number>;
-  mostObservedSpecies: string | null;
-  countsByDay: DayCount[]; // sorted ascending by date
-  getSpeciesHistory: (species: string) => DayCount[];
-};
+export interface BirdStatsData {
+  totalBirds: number;
+  uniqueLocations: number;
+  mostCommonLocation: string | null;
+  firstCaptureDate: string | null;
+  lastCaptureDate: string | null;
+  birdsThisMonth: number;
+  birdsThisYear: number;
+  locationCounts: Record<string, number>;
+}
 
 /**
- * useStats
- *
- * Compute derived statistics from an array of Observations.
- *
- * Notes:
- * - Purely derived from the observations array (no internal state).
- * - Uses useMemo for performance so callers can pass results to components without
- *   causing unnecessary re-renders.
+ * Custom hook to calculate statistics from bird collection
+ * Memoized for performance - only recalculates when birds array changes
  */
-export default function useStats(observations: Observation[] = []): Stats {
-  const stats = useMemo(() => {
-    const speciesCounts: Record<string, number> = {};
-    const dayMap: Record<string, Record<string, number>> = {}; // date -> species -> count
-    const dayTotals: Record<string, number> = {}; // date -> total count
+export default function useBirdStats(birds: BirdData[]): BirdStatsData {
+  return useMemo(() => {
+    // Return empty stats if no birds
+    if (birds.length === 0) {
+      return {
+        totalBirds: 0,
+        uniqueLocations: 0,
+        mostCommonLocation: null,
+        firstCaptureDate: null,
+        lastCaptureDate: null,
+        birdsThisMonth: 0,
+        birdsThisYear: 0,
+        locationCounts: {},
+      };
+    }
 
-    const toDateKey = (iso: string) => {
+    // Calculate location statistics
+    const locations = birds
+      .map((b) => b.location)
+      .filter((loc): loc is string => !!loc && loc.trim() !== "");
+
+    const uniqueLocs = new Set(locations);
+
+    // Count occurrences of each location
+    const locationCounts: Record<string, number> = {};
+    locations.forEach((loc) => {
+      locationCounts[loc] = (locationCounts[loc] || 0) + 1;
+    });
+
+    // Find most common location
+    let mostCommon: string | null = null;
+    let maxCount = 0;
+    Object.entries(locationCounts).forEach(([loc, count]) => {
+      if (count > maxCount) {
+        maxCount = count;
+        mostCommon = loc;
+      }
+    });
+
+    // Parse and sort dates
+    const dates = birds
+      .map((b) => {
+        try {
+          return new Date(b.dateCaptured);
+        } catch {
+          return null;
+        }
+      })
+      .filter((d): d is Date => d !== null && !isNaN(d.getTime()));
+
+    const sortedDates = dates.sort((a, b) => a.getTime() - b.getTime());
+
+    // Calculate time-based statistics
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const birdsThisMonth = birds.filter((b) => {
       try {
-        const d = new Date(iso);
-        if (Number.isNaN(d.getTime())) return "invalid";
-        // YYYY-MM-DD
-        const yyyy = d.getFullYear();
-        const mm = String(d.getMonth() + 1).padStart(2, "0");
-        const dd = String(d.getDate()).padStart(2, "0");
-        return `${yyyy}-${mm}-${dd}`;
+        const d = new Date(b.dateCaptured);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
       } catch {
-        return "invalid";
+        return false;
       }
-    };
+    }).length;
 
-    for (const obs of observations) {
-      const species = (obs.species || "unknown").trim();
-      speciesCounts[species] = (speciesCounts[species] || 0) + 1;
-
-      const dateKey = toDateKey(obs.timestamp || "");
-      if (!dayMap[dateKey]) dayMap[dateKey] = {};
-      dayMap[dateKey][species] = (dayMap[dateKey][species] || 0) + 1;
-      dayTotals[dateKey] = (dayTotals[dateKey] || 0) + 1;
-    }
-
-    const totalCount = observations.length;
-
-    // percent by species
-    const percentBySpecies: Record<string, number> = {};
-    for (const [s, c] of Object.entries(speciesCounts)) {
-      percentBySpecies[s] = totalCount > 0 ? (c / totalCount) * 100 : 0;
-    }
-
-    // most observed species
-    let mostObservedSpecies: string | null = null;
-    let maxCount = -1;
-    for (const [s, c] of Object.entries(speciesCounts)) {
-      if (c > maxCount) {
-        maxCount = c;
-        mostObservedSpecies = s;
+    const birdsThisYear = birds.filter((b) => {
+      try {
+        const d = new Date(b.dateCaptured);
+        return d.getFullYear() === currentYear;
+      } catch {
+        return false;
       }
-    }
-    if (maxCount === -1) mostObservedSpecies = null;
-
-    // counts by day (sorted)
-    const countsByDay: DayCount[] = Object.keys(dayTotals)
-      .sort() // lexicographic works for YYYY-MM-DD
-      .map((date) => ({ date, count: dayTotals[date] }));
-
-    const getSpeciesHistory = (species: string): DayCount[] => {
-      const out: DayCount[] = [];
-      const keys = Object.keys(dayMap).sort();
-      for (const date of keys) {
-        out.push({ date, count: dayMap[date][species] || 0 });
-      }
-      return out;
-    };
+    }).length;
 
     return {
-      totalCount,
-      speciesCounts,
-      percentBySpecies,
-      mostObservedSpecies,
-      countsByDay,
-      getSpeciesHistory,
+      totalBirds: birds.length,
+      uniqueLocations: uniqueLocs.size,
+      mostCommonLocation: mostCommon,
+      firstCaptureDate:
+        sortedDates.length > 0 ? sortedDates[0].toLocaleDateString() : null,
+      lastCaptureDate:
+        sortedDates.length > 0
+          ? sortedDates[sortedDates.length - 1].toLocaleDateString()
+          : null,
+      birdsThisMonth,
+      birdsThisYear,
+      locationCounts,
     };
-  }, [observations]);
-
-  // Return stable callbacks (they are functions from the memoized object)
-  return {
-    totalCount: stats.totalCount,
-    speciesCounts: stats.speciesCounts,
-    percentBySpecies: stats.percentBySpecies,
-    mostObservedSpecies: stats.mostObservedSpecies,
-    countsByDay: stats.countsByDay,
-    getSpeciesHistory: useCallback(
-      (species: string) => stats.getSpeciesHistory(species),
-      [stats]
-    ),
-  };
+  }, [birds]); // Only recalculate when birds array changes
 }

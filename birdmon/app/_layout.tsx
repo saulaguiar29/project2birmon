@@ -19,7 +19,15 @@ function StackNavigator() {
         }}
       >
         <Stack.Screen name="index" options={{ title: "BirdMon Collection" }} />
-        <Stack.Screen name="camera" options={{ title: "Capture Bird" }} />
+        <Stack.Screen
+          name="camera"
+          options={{
+            title: "Capture Bird",
+            headerShown: false, // FIXED: Hide header for full-screen camera
+            presentation: "fullScreenModal", // FIXED: Makes it truly full screen
+            animation: "slide_from_bottom",
+          }}
+        />
         <Stack.Screen
           name="avoidview/card-detail"
           options={{ title: "Bird Details" }}
