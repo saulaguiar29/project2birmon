@@ -1,6 +1,3 @@
-Updated readme casual · MD
-Copy
-
 # BirdMon - Your Personal Bird Collection App
 
 ## Application Description
@@ -19,8 +16,7 @@ Key features include:
 - **Detailed Views**: Tap any bird to see details and stats
 
 ## Human Interface Guidelines Implementation
-
-I made sure to follow iOS and Android design guidelines to create an app that feels native and intuitive. Here's how I applied some key principles:
+ Applied  key principles:
 
 **[iOS HIG - Touch Targets](https://developer.apple.com/design/human-interface-guidelines/inputs/touchscreen-gestures)** (44x44 points minimum):
 
